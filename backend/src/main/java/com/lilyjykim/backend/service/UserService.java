@@ -6,6 +6,8 @@ import com.lilyjykim.backend.entity.User;
 import com.lilyjykim.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+
 
     // 사용자 등록
     public Long createUser(UserRequestDTO dto) {
@@ -54,6 +58,7 @@ public class UserService {
                         .orElseThrow(()-> new IllegalArgumentException("User not found with id : " + id));
 
         userRepository.delete(user);
+        log.info("User deleted with id : " + id);
     }
 
 

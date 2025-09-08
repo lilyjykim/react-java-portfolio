@@ -14,6 +14,7 @@ function App() {
   const fetchUsers = () => {
     axios.get("http://localhost:8080/api/users")
         .then(response =>{
+            setUsers(response.data);
         })
         .catch(error => {
             console.error("Error fetching users:", error);
@@ -38,17 +39,20 @@ function App() {
     .catch(error => {
         console.error("Error creating user: ", error);
     });
-  }
+  };
 
-//  useEffect(()=>{
-//    axios.get("http://localhost:8080/api/users")
-//        .then(response =>{
-//            setUsers(response.data);
-//        })
-//        .catch(error =>{
-//            console.error("Error fetching users:",error);
-//        })
-//  },[]);
+  const handleDelete = (id) => {
+    if(window.confirm("Do you want to delete?")){
+        axios.delete(`http://localhost:8080/api/users/${id}`)
+            .then(()=>{
+                alert("Selected data deleted.");
+                fetchUsers();// 삭제 후 목록 갱신
+            })
+            .catch(error =>{
+                console.error("Error deleting user: "+ id,error);
+            })
+    }
+  };
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -57,6 +61,7 @@ function App() {
         {users.map(user => (
           <li key={user.id}>
             <strong>{user.name}</strong> ({user.email})
+            <button onClick={()=> handleDelete(user.id)} style={{marginLeft:'10px'}}>Delete</button>
           </li>
         ))}
       </ul>
