@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col, Form, Button, ListGroup, Card } from "react-bootstrap";
+
 
 function App() {
   const[users, setUsers] = useState([]);
@@ -86,68 +89,86 @@ function App() {
           });
   }
 
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h1>User List</h1>
-      <ul>
-        {users.map(user => (
-          <li key={user.id}>
-            <strong>{user.name}</strong> ({user.email})
-            <button onClick={()=> clickDelete(user.id)} style={{marginLeft:'10px'}}>Delete</button>
-            <button onClick={()=> clickEdit(user)} style={{marginLeft:'10px'}}>Edit</button>
-          </li>
-        ))}
-      </ul>
+  const resetForm = () => {
+    setEditingId(null);
+    setName("");
+    setEmail("");
+    setPassword("");
+  };
 
-      <h2>{editingId ? "Edit User" : "Create User"}</h2>
-      <form onSubmit={formSubmit}>
-        <div>
-          <label>Name: </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Email: </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password: </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">{editingId ? "Update" : "Register"}</button>
-        {editingId && (
-          <button
-            type="button"
-            onClick={() => {
-              setEditingId(null);
-              setName("");
-              setEmail("");
-              setPassword("");
-            }}
-            style={{ marginLeft: "10px" }}
-          >
-            Cancel
-          </button>
-        )}
-      </form>
-    </div>
+
+  return (
+  <Container className="py-4">
+      <Row>
+          <Col md={6}>
+              <h2>User List</h2>
+              <ListGroup>
+                  {users.map(user => (
+                      <ListGroup.Item key={user.id} className="d-flex justify-content-between align-items-center">
+                          <div>
+                              <strong>{user.name}</strong> ({user.email})
+                          </div>
+                          <div>
+                              <Button variant="danger" size="sm" className="me-2" onClick={() => clickDelete(user.id)}>Delete</Button>
+                              <Button variant="warning" size="sm" onClick={() => clickEdit(user)}>Edit</Button>
+                          </div>
+                      </ListGroup.Item>
+                  ))}
+              </ListGroup>
+          </Col>
+  
+          <Col md={6}>
+              <h2>{editingId ? "Edit User" : "Create User"}</h2>
+              <Card>
+                  <Card.Body>
+                      <Form onSubmit={formSubmit}>
+                          <Form.Group className="mb-3">
+                              <Form.Label>Name</Form.Label>
+                              <Form.Control
+                                  type="text"
+                                  value={name}
+                                  onChange={(e) => setName(e.target.value)}
+                                  required
+                              />
+                          </Form.Group>
+  
+                          <Form.Group className="mb-3">
+                              <Form.Label>Email</Form.Label>
+                              <Form.Control
+                                  type="email"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                                  required
+                              />
+                          </Form.Group>
+  
+                          <Form.Group className="mb-3">
+                              <Form.Label>Password</Form.Label>
+                              <Form.Control
+                                  type="password"
+                                  value={password}
+                                  onChange={(e) => setPassword(e.target.value)}
+                                  required
+                              />
+                          </Form.Group>
+  
+                          <div className="d-flex gap-2">
+                              <Button type="submit" variant="primary">
+                                  {editingId ? "Update" : "Register"}
+                              </Button>
+                              {editingId && (
+                                  <Button type="button" variant="secondary" onClick={resetForm}>
+                                      Cancel
+                                  </Button>
+                              )}
+                          </div>
+                      </Form>
+                  </Card.Body>
+              </Card>
+          </Col>
+      </Row>
+  </Container>
   );
 }
 
 export default App;
-//        <button type="clear" onClick={()=> handleClear()} style={{marginLeft:'10px'}} >Clear</button>
-//e.preventDefault();
